@@ -69,7 +69,7 @@ public class Dashboard_Test {
         page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("Authentication Validity*")).locator("span").click();
         page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("6 Months")).click();
         page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("QR Design QROWNTECH Design")).click();
-        page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Standard Design")).click();
+        //page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Standard Design")).click();
 
         page.locator("ngx-colors").first().click();
         page.locator("div:nth-child(13) > .circle").click();
