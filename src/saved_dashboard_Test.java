@@ -50,42 +50,61 @@ public class saved_dashboard_Test {
             //page.waitForLoadState(Page.LoadState.DOMCONTENTLOADED);
 
             // Example of recording actions:
+            
+            //main setup
             page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("documenttype Document Type")).click();
             page.locator("#floatingdoctypedec").click();
-            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Document Archiving")).check();
-            assertThat(page.locator("app-collapse")).containsText("Document Metadata");
+            page.getByText("QR GenerateDocument Archiving").click();
             assertThat(page.getByText("Field Required")).isVisible();
             page.locator("#floatingdoctypedec").click();
             page.locator("#floatingdoctypedec").fill("pdf");
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Document Archiving")).check();
+            assertThat(page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Document Metadata"))).isVisible();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("QR Generate")).uncheck();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("QR Generate")).check();
+            
+            // QR setup
             page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("QR setup")).getByRole(AriaRole.LINK).click();
-            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Pin Code")).check();
-            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Show Authenticator Info")).check();
             page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("Authentication Validity*")).locator("span").click();
-            page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("6 Months")).click();
+            page.locator(".cdk-overlay-backdrop").click();
+            page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("Authentication Validity*")).locator("span").click();
+            page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("12 Months")).click();
             page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("QR Design QROWNTECH Design")).click();
             page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Standard Design")).click();
-            page.locator("ngx-colors").first().click();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Pin Code")).check();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Show Authenticator Info")).check();
+            page.locator(".circle").first().click();
+            page.locator("#ngx-colors-overlay").getByRole(AriaRole.IMG).click();
+            page.locator("#ngx-colors-overlay path").nth(1).click();
             page.locator("div:nth-child(13) > .circle").click();
-            page.locator("ngx-colors").nth(1).click();
-            page.locator("div:nth-child(19) > .circle").click();
+            page.locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle").click();
+            page.locator("div:nth-child(7) > .circle").click();
             page.locator("div:nth-child(10) > .circle").click();
-            page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("QR Stamped On Document* First")).click();
-            page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("All pages")).click();
-            //page.locator("label").filter(new Locator.FilterOptions().setHasText("Common Files")).click();
-            
-            // check html to see labels for file input 
+            page.locator("#mat-select-value-13").click();
+            page.getByText("All pages").click();
             page.locator("label:has-text('Common Files') input[type='file']").setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-            //page.locator("label:has-text('Upload Logo Inside QR') input[type='file']").waitFor();
             page.locator("label:has-text('Upload Logo Inside QR') input[type='file']").setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-
             
+            //Communication Channels
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Communication Channels")).getByRole(AriaRole.LINK).click();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Email")).check();
+            page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Email")).uncheck();
+            
+            // Document Metabase
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Document Metadata")).getByRole(AriaRole.LINK).click();
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Add Row")).click();
+            page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Key value")).click();
+            page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Key value")).fill("Metadata 1");
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Add Row")).click();
+            page.getByRole(AriaRole.ROW, new Page.GetByRoleOptions().setName("Delete").setExact(true)).getByPlaceholder("Key value").click();
+            page.getByRole(AriaRole.ROW, new Page.GetByRoleOptions().setName("Delete").setExact(true)).getByPlaceholder("Key value").fill("Metadata 2");
+            page.getByRole(AriaRole.ROW, new Page.GetByRoleOptions().setName("Metadata 1 Delete")).getByRole(AriaRole.BUTTON).click();
             
             // Document Template
             page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Document Template")).getByRole(AriaRole.LINK).click();
-         // Locate the input[type='file'] element and set the file to upload
+            // Locate the input[type='file'] element and set the file to upload
             page.locator("label.qwd-viewer-doc-label input[type='file']").setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
 
-            
             // End of your recorded actions
 
             // Add a delay or some condition to keep the page open for inspection if needed
