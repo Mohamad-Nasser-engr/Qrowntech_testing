@@ -105,7 +105,12 @@ public class Dashboard_Test {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Document Template")).getByRole(AriaRole.LINK).click();
         page.locator("label.qwd-viewer-doc-label input[type='file']")
              .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-
+        
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
+        page.locator("label.qwd-viewer-doc-label input[type='file']")
+        .setInputFiles(Paths.get("C:\\Users\\user\\Desktop\\HAMOUDI LAU\\Spring 2023\\Strength of Material\\Chapter 6- problems.pdf"));
+        assertThat(page.getByText("Exceeded File Size Limit:")).isVisible();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
         // Optional wait to observe//
         page.waitForTimeout(5000);
     }
