@@ -18,11 +18,11 @@ public class LoginHelper {
         page.locator("#username").fill("mohamadnasser13@hotmail.com");
         page.locator("#userpwd").click();
         page.locator("#userpwd").fill("Mn1321/Mn132");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")).click();
+        //page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")).click();
 
         // Give time to manually solve CAPTCHA
         System.out.println("⏳ Waiting 60 seconds for CAPTCHA (if any)...");
-        page.waitForTimeout(20000); // wait 60 seconds
+        page.waitForTimeout(60000); // wait 60 seconds
 
         // Wait for navigation to dashboard or home
         System.out.println("➡️ Waiting for dashboard page navigation...");

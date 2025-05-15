@@ -61,5 +61,10 @@
      <version>5.8.1</version>
      <scope>test</scope>
    </dependency>
+   <dependency>
+   	<groupId>Playwright_test</groupId>
+   	<artifactId>Playwright_test</artifactId>
+   	<version>0.0.1-SNAPSHOT</version>
+   </dependency>
   </dependencies>
 </project>
