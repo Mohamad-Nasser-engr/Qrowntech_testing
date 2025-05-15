@@ -106,7 +106,7 @@ public class Dashboard_Test {
         page.locator("label.qwd-viewer-doc-label input[type='file']")
              .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
 
-        // Optional wait to observe
+        // Optional wait to observe//
         page.waitForTimeout(5000);
     }
 
