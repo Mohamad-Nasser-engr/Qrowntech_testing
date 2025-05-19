@@ -62,7 +62,7 @@ public class Dashboard_Test {
         try {
             if (Files.exists(statePath)) {
                 System.out.println("✅ Using saved session...");
-                context = browser.newContext(new Browser.NewContextOptions().setStorageStatePath(statePath));
+                context = browser.newContext(new Browser.NewContextOptions().setStorageStatePath(statePath).setViewportSize(1920, 1080));
                 page = context.newPage();
                 page.navigate("https://ambitious-smoke-0480d8303.5.azurestaticapps.net/#/dashboard");
 
@@ -172,7 +172,7 @@ public class Dashboard_Test {
         Locator canvas = page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").first();
         Path screenshotPath = Paths.get("QR_code_image.png");
 
-        //canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
         System.out.println("QR Code detected: " + qrText);
