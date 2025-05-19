@@ -111,18 +111,23 @@ public class Dashboard_Test {
         page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Show Authenticator Info")).check();
 
         // Color selections
-		/*
-		 * page.locator(".circle").first().click();
-		 * page.locator("#ngx-colors-overlay").getByRole(AriaRole.IMG).click();
-		 * page.locator("#ngx-colors-overlay path").nth(1).click();
-		 * page.locator("div:nth-child(13) > .circle").click(); page.
-		 * locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle"
-		 * ).click(); page.locator("div:nth-child(7) > .circle").click();
-		 * page.locator("div:nth-child(10) > .circle").click();
-		 * 
-		 * page.locator("#mat-select-value-13").click();
-		 * page.getByText("All pages").click();
-		 */
+		
+		  // background
+			/*
+			 * page.locator(".circle").first().click();
+			 * page.locator("#ngx-colors-overlay").getByRole(AriaRole.IMG).click();
+			 * page.locator("#ngx-colors-overlay path").nth(1).click();
+			 * page.locator("div:nth-child(8) > .circle").click();
+			 */
+		  // foreground
+		  page.locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle").click(); 
+		  page.locator("div:nth-child(4) > .circle").click();
+		  page.locator("div:nth-child(9) > .circle").click();
+		  
+		  page.locator("#mat-select-value-13").click();
+		  page.getByText("All pages").click();
+		 
+		  
 
         // File uploads
         page.locator("label:has-text('Common Files') input[type='file']")
@@ -160,14 +165,14 @@ public class Dashboard_Test {
         page.waitForTimeout(2000);
         // QR detection
      // Zoom out the entire page to 75%
-        page.evaluate("document.body.style.zoom = '50%'");
+        page.evaluate("document.body.style.zoom = '60%'");
 
         // Small wait so the zoom effect applies properly
         page.waitForTimeout(500);
         Locator canvas = page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").first();
         Path screenshotPath = Paths.get("QR_code_image.png");
         
-        //canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
         System.out.println("QR Code detected: " + qrText);
