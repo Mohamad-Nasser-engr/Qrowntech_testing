@@ -1,9 +1,18 @@
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.*;
 
+import java.awt.image.BufferedImage;
 import java.nio.file.*;
+
+import javax.imageio.ImageIO;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+
 
 public class Dashboard_Test {
     static Playwright playwright;
@@ -11,6 +20,21 @@ public class Dashboard_Test {
     static BrowserContext context;
     static Page page;
     static final Path statePath = Paths.get("state.json");
+    
+    //QR detector
+    public static String detectQRCodeInImage(Path imagePath) {
+        try {
+            BufferedImage image = ImageIO.read(imagePath.toFile());
+            LuminanceSource source = new BufferedImageLuminanceSource(image);
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+            Result result = new MultiFormatReader().decode(bitmap);
+            return result.getText();
+        } catch (Exception e) {
+            System.err.println("QR code not found: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     @BeforeAll
     static void setup() {
@@ -103,14 +127,25 @@ public class Dashboard_Test {
 
         // Document Template
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Document Template")).getByRole(AriaRole.LINK).click();
-        page.locator("label.qwd-viewer-doc-label input[type='file']")
-             .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
         
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
         page.locator("label.qwd-viewer-doc-label input[type='file']")
         .setInputFiles(Paths.get("C:\\Users\\user\\Desktop\\HAMOUDI LAU\\Spring 2023\\Strength of Material\\Chapter 6- problems.pdf"));
         assertThat(page.getByText("Exceeded File Size Limit:")).isVisible();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+        
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
+        
+        page.locator("label.qwd-viewer-doc-label input[type='file']")
+        .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
+        
+        // QR detection
+        Locator canvas = page.locator("canvas").first();
+        Path screenshotPath = Paths.get("canvas_qr.png");
+        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+        String qrText = detectQRCodeInImage(screenshotPath);
+        Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
+        System.out.println("QR Code detected: " + qrText);
+        
         // Optional wait to observe//
         page.waitForTimeout(5000);
     }
