@@ -165,7 +165,7 @@ public class Dashboard_Test {
         page.waitForTimeout(2000);
         // QR detection
      // Zoom out the entire page to 75%
-        page.evaluate("document.body.style.zoom = '60%'");
+        page.evaluate("document.body.style.zoom = '100%'");
 
         // Small wait so the zoom effect applies properly
         page.waitForTimeout(500);
