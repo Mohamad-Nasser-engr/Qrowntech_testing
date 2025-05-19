@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class Dashboard_Test {
     @BeforeAll
     static void setup() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(Arrays.asList("--window-size=1920,1080","--disable-gpu")));
 
         try {
             if (Files.exists(statePath)) {
@@ -164,7 +165,7 @@ public class Dashboard_Test {
         .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
         page.waitForTimeout(2000);
         // QR detection
-     // Zoom out the entire page to 75%
+     // Zoom out the entire page
         page.evaluate("document.body.style.zoom = '60%'");
 
         // Small wait so the zoom effect applies properly
@@ -173,6 +174,7 @@ public class Dashboard_Test {
         Path screenshotPath = Paths.get("QR_code_image.png");
 
         canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+        
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
         System.out.println("QR Code detected: " + qrText);
