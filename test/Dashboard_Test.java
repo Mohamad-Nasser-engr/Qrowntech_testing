@@ -171,7 +171,7 @@ public class Dashboard_Test {
         page.waitForTimeout(500);
         Locator canvas = page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").first();
         Path screenshotPath = Paths.get("QR_code_image.png");
-        page.waitForTimeout(5000);
+
         canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
