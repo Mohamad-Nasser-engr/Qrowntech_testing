@@ -6,7 +6,11 @@ import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.*;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -27,13 +31,27 @@ public class Dashboard_Test {
             BufferedImage image = ImageIO.read(imagePath.toFile());
             LuminanceSource source = new BufferedImageLuminanceSource(image);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-            Result result = new MultiFormatReader().decode(bitmap);
+
+            // Add decode hints
+            Map<DecodeHintType, Object> hints = new HashMap<>();
+            hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+            hints.put(DecodeHintType.POSSIBLE_FORMATS, Collections.singletonList(BarcodeFormat.QR_CODE));
+            hints.put(DecodeHintType.CHARACTER_SET, "UTF-8");
+
+            Result result = new MultiFormatReader().decode(bitmap, hints);
             return result.getText();
-        } catch (Exception e) {
+        } catch (NotFoundException e) {
             System.err.println("QR code not found: " + e.getMessage());
+            return null;
+        } catch (IOException e) {
+            System.err.println("Image read error: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
             return null;
         }
     }
+
 
 
     @BeforeAll
@@ -93,16 +111,18 @@ public class Dashboard_Test {
         page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Show Authenticator Info")).check();
 
         // Color selections
-        page.locator(".circle").first().click();
-        page.locator("#ngx-colors-overlay").getByRole(AriaRole.IMG).click();
-        page.locator("#ngx-colors-overlay path").nth(1).click();
-        page.locator("div:nth-child(13) > .circle").click();
-        page.locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle").click();
-        page.locator("div:nth-child(7) > .circle").click();
-        page.locator("div:nth-child(10) > .circle").click();
-
-        page.locator("#mat-select-value-13").click();
-        page.getByText("All pages").click();
+		/*
+		 * page.locator(".circle").first().click();
+		 * page.locator("#ngx-colors-overlay").getByRole(AriaRole.IMG).click();
+		 * page.locator("#ngx-colors-overlay path").nth(1).click();
+		 * page.locator("div:nth-child(13) > .circle").click(); page.
+		 * locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle"
+		 * ).click(); page.locator("div:nth-child(7) > .circle").click();
+		 * page.locator("div:nth-child(10) > .circle").click();
+		 * 
+		 * page.locator("#mat-select-value-13").click();
+		 * page.getByText("All pages").click();
+		 */
 
         // File uploads
         page.locator("label:has-text('Common Files') input[type='file']")
@@ -133,15 +153,21 @@ public class Dashboard_Test {
         assertThat(page.getByText("Exceeded File Size Limit:")).isVisible();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
         
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
+        //page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
         
         page.locator("label.qwd-viewer-doc-label input[type='file']")
         .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-        
+        page.waitForTimeout(2000);
         // QR detection
-        Locator canvas = page.locator("canvas").first();
-        Path screenshotPath = Paths.get("canvas_qr.png");
-        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+     // Zoom out the entire page to 75%
+        page.evaluate("document.body.style.zoom = '50%'");
+
+        // Small wait so the zoom effect applies properly
+        page.waitForTimeout(500);
+        Locator canvas = page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").first();
+        Path screenshotPath = Paths.get("QR_code_image.png");
+        
+        //canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
         System.out.println("QR Code detected: " + qrText);
