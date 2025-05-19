@@ -111,7 +111,7 @@ public class Dashboard_Test {
         page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Show Authenticator Info")).check();
 
         // Color selections
-		
+		 
 		  // background
 			/*
 			 * page.locator(".circle").first().click();
