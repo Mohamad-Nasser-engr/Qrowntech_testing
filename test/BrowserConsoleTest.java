@@ -58,7 +58,7 @@ public class BrowserConsoleTest {
                         .setViewportSize(1920, 1080));
                 page = context.newPage();
 
-                // Reattach listener to the new page
+                // Re-attach listener to the new page
                 page.onConsoleMessage(msg -> {
                     if ("error".equals(msg.type())) {
                         System.err.println("🚨 Console Error: " + msg.text());
