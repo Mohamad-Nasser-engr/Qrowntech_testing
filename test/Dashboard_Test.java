@@ -78,7 +78,7 @@ public class Dashboard_Test {
     @BeforeAll
     static void setup() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true).setArgs(Arrays.asList("--window-size=1920,1080","--disable-gpu","--no-sandbox", "--use-gl=egl")));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(Arrays.asList("--window-size=1920,1080","--disable-gpu","--no-sandbox", "--use-gl=egl")));
 
         try {
             if (Files.exists(statePath)) {
