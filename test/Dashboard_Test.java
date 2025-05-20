@@ -3,6 +3,8 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.ScreenshotType;
+
 import org.junit.jupiter.api.*;
 
 import java.awt.image.BufferedImage;
@@ -26,11 +28,29 @@ public class Dashboard_Test {
     static Page page;
     static final Path statePath = Paths.get("state.json");
     
-    //QR detector
     public static String detectQRCodeInImage(Path imagePath) {
         try {
             BufferedImage image = ImageIO.read(imagePath.toFile());
-            LuminanceSource source = new BufferedImageLuminanceSource(image);
+
+            // Define crop dimensions (top-left corner)
+            int cropWidth = Math.min(50, image.getWidth());
+            int cropHeight = Math.min(50, image.getHeight());
+
+            BufferedImage croppedImage = image.getSubimage(0, 0, cropWidth, cropHeight);
+
+            // Determine where to save the cropped image
+            Path saveDir = imagePath.getParent();
+            if (saveDir == null) {
+                saveDir = Path.of(System.getProperty("user.dir"));  // fallback to current directory
+            }
+            Path croppedPath = saveDir.resolve("cropped_top_left.png");
+
+            // Save the cropped image
+            ImageIO.write(croppedImage, "png", croppedPath.toFile());
+            System.out.println("Cropped image saved to: " + croppedPath);
+
+            // Continue with QR detection on cropped image
+            LuminanceSource source = new BufferedImageLuminanceSource(croppedImage);
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
             // Add decode hints
@@ -41,6 +61,7 @@ public class Dashboard_Test {
 
             Result result = new MultiFormatReader().decode(bitmap, hints);
             return result.getText();
+
         } catch (NotFoundException e) {
             System.err.println("QR code not found: " + e.getMessage());
             return null;
@@ -54,11 +75,10 @@ public class Dashboard_Test {
     }
 
 
-
     @BeforeAll
     static void setup() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(Arrays.asList("--window-size=1920,1080","--disable-gpu")));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(Arrays.asList("--window-size=1920,1080","--disable-gpu","--no-sandbox", "--use-gl=egl")));
 
         try {
             if (Files.exists(statePath)) {
@@ -121,12 +141,15 @@ public class Dashboard_Test {
 			 * page.locator("div:nth-child(8) > .circle").click();
 			 */
 		  // foreground
-		  page.locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle").click(); 
-		  page.locator("div:nth-child(4) > .circle").click();
-		  page.locator("div:nth-child(9) > .circle").click();
-		  
-		  page.locator("#mat-select-value-13").click();
-		  page.getByText("All pages").click();
+			/*
+			 * page.
+			 * locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle"
+			 * ).click(); page.locator("div:nth-child(4) > .circle").click();
+			 * page.locator("div:nth-child(9) > .circle").click();
+			 * 
+			 * page.locator("#mat-select-value-13").click();
+			 * page.getByText("All pages").click();
+			 */
 		 
 		  
 
@@ -169,11 +192,12 @@ public class Dashboard_Test {
         page.evaluate("document.body.style.zoom = '60%'");
 
         // Small wait so the zoom effect applies properly
+        page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").scrollIntoViewIfNeeded();
         page.waitForTimeout(500);
         Locator canvas = page.locator("#PdfjsAnnotationExtension_painter_wrapper_page_1 canvas").first();
         Path screenshotPath = Paths.get("QR_code_image.png");
 
-        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
+        canvas.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath).setType(ScreenshotType.PNG));
         
         String qrText = detectQRCodeInImage(screenshotPath);
         Assertions.assertNotNull(qrText, "QR Code was not detected in canvas screenshot");
