@@ -141,15 +141,14 @@ public class Dashboard_Test {
 			 * page.locator("div:nth-child(8) > .circle").click();
 			 */
 		  // foreground
-			/*
-			 * page.
-			 * locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle"
-			 * ).click(); page.locator("div:nth-child(4) > .circle").click();
-			 * page.locator("div:nth-child(9) > .circle").click();
-			 * 
-			 * page.locator("#mat-select-value-13").click();
-			 * page.getByText("All pages").click();
-			 */
+			
+			  page.locator("div:nth-child(7) > div > .color-picker > .app-color-picker > .preview > .preview-background > .circle").click(); 
+			  page.locator("div:nth-child(4) > .circle").click();
+			  page.locator("div:nth-child(9) > .circle").click();
+			  
+			  page.locator("#mat-select-value-13").click();
+			  page.getByText("All pages").click();
+			 
 		 
 		  
 
