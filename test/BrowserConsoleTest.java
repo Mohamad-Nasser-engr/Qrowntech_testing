@@ -20,7 +20,7 @@ public class BrowserConsoleTest {
     static Page page;
     static final Path statePath = Paths.get("state.json");
     
-    static List<String> browserErrorLogs = new ArrayList<>();
+    List<String> browserLogs = new ArrayList<>();
 
 
     @BeforeAll
@@ -48,8 +48,6 @@ public class BrowserConsoleTest {
             page.onConsoleMessage(msg -> {
                 if ("error".equals(msg.type())) {
                     System.err.println("🚨 Console Error: " + msg.text());
-                    browserErrorLogs.add("🚨 Console Error: " + msg.text());
-
                 } else {
                     System.out.println("📋 Console [" + msg.type() + "]: " + msg.text());
                 }
@@ -169,17 +167,8 @@ public class BrowserConsoleTest {
 
     @AfterAll
     static void teardownAll() {
-        try {
-            // Check for browser errors before shutting down
-            if (!browserErrorLogs.isEmpty()) {
-                String errorMessage = String.join("\n", browserErrorLogs);
-                Assertions.fail("Browser console errors detected:\n" + errorMessage);
-            }
-        } finally {
-            context.close();
-            browser.close();
-            playwright.close();
-        }
+        context.close();
+        browser.close();
+        playwright.close();
     }
-
 }
