@@ -131,8 +131,7 @@ public class BrowserConsoleTest {
         // File uploads
         page.locator("label:has-text('Common Files') input[type='file']")
              .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-        page.locator("label:has-text('Upload Logo Inside QR') input[type='file']")
-             .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
+        page.locator("label:has-text('Upload Logo Inside QR') input[type='file']").setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
 
         // Communication Channels
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Communication Channels")).getByRole(AriaRole.LINK).click();
