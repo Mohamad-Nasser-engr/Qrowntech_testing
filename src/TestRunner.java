@@ -24,6 +24,7 @@ public class TestRunner {
                 Page page = context.newPage();
                 page.navigate("https://ambitious-smoke-0480d8303.5.azurestaticapps.net/#/dashboard");
                 page.waitForLoadState();
+                page.waitForTimeout(5000);
 
                 // Check if we're still logged in
                 if (page.url().contains("/login")) {
