@@ -160,7 +160,7 @@ public class BrowserConsoleTest {
         
         page.locator("label.qwd-viewer-doc-label input[type='file']")
         .setInputFiles(Paths.get("C:/Users/user/Desktop/WORK DOCUMENTS/MohamadNasser_Resume.pdf"));
-        page.waitForTimeout(2000);
+        
         
         // Optional wait to observe//
         page.waitForTimeout(3000); // Give it time to log console messages

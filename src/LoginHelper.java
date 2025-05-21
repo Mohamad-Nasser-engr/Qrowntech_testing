@@ -17,7 +17,7 @@ public class LoginHelper {
         page.locator("#username").click();
         page.locator("#username").fill("mohamadnasser13@hotmail.com");
         page.locator("#userpwd").click();
-        page.locator("#userpwd").fill("Mn1321/Mn132");
+        page.locator("#userpwd").fill("Password123!");
         //page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")).click();
 
         // Give time to manually solve CAPTCHA

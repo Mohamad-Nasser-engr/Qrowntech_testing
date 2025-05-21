@@ -179,6 +179,7 @@ public class Dashboard_Test {
         page.locator("label.qwd-viewer-doc-label input[type='file']")
         .setInputFiles(Paths.get("C:\\Users\\user\\Desktop\\HAMOUDI LAU\\Spring 2023\\Strength of Material\\Chapter 6- problems.pdf"));
         assertThat(page.getByText("Exceeded File Size Limit:")).isVisible();
+        page.waitForTimeout(2000);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
         
         //page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Delete")).click();
