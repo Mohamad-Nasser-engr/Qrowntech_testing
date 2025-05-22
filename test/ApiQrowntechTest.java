@@ -11,10 +11,21 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ApiQrowntechTest {
     static Playwright playwright;
     static APIRequestContext apiRequest;
     static String token;
+    
+    
+    //
+    static boolean corners;
+    static boolean domain;
+    static int qrDesign;
+    static String backgroundColor;
+    static String foregroundColor;
+    //
 
     // POJOs for JSON deserialization (only what's needed)
     static class Cookie {
@@ -90,8 +101,9 @@ public class ApiQrowntechTest {
     }
 
     @Test
+    @Order(1)
     void testGetApiConfig() {
-        APIResponse response = apiRequest.get("/assets/json/api-config.json");
+        APIResponse response = apiRequest.get("https://ambitious-smoke-0480d8303.5.azurestaticapps.net/assets/json/api-config.json");
         assertEquals(200, response.status());
 
         String body = response.text();
@@ -101,6 +113,7 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(2)
     void testGetReturnDocumentTypes() {
         String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnDocumentTypes?page_number=1&page_size=5";
         APIResponse response = apiRequest.get(url);
@@ -113,6 +126,7 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(3)
     void testGetReturnPages() {
         String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnPages";
         APIResponse response = apiRequest.get(url);
@@ -125,6 +139,7 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(4)
     void testGetReturnConfigurations() {
         String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnConfiguration";
         APIResponse response = apiRequest.get(url);
@@ -134,11 +149,26 @@ public class ApiQrowntechTest {
         System.out.println("RETURN CONFIGURATION RESPONSE");
         System.out.println("Response from returnPages:\n" + body);
         System.out.println();
+        
+        
+     // Parse the JSON array
+        JsonArray configArray = JsonParser.parseString(body).getAsJsonArray();
+        if (!configArray.isEmpty()) {
+            JsonObject config = configArray.get(0).getAsJsonObject(); // Use the first object
+            corners = config.get("corners").getAsBoolean();
+            //authenticator = config.get("authenticator");
+            domain = config.get("domain").getAsBoolean();
+            qrDesign = config.get("qr_design").getAsInt();
+            backgroundColor = config.get("background_color").getAsString();
+            foregroundColor = config.get("foreground_color").getAsString();
+            
+        }
     }
     
     @Test
+    @Order(5)
     void testGetReturnQrDesign() {
-        String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnConfiguration";
+        String url = "https://qrdafd.qrowntech.io/dev/orgmgmt/returnQrDesigns";
         APIResponse response = apiRequest.get(url);
         assertEquals(200, response.status());
 
@@ -149,6 +179,7 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(6)
     void testGetReturnAltCommChannel() {
         String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnAlternativeCommChannel";
         APIResponse response = apiRequest.get(url);
@@ -161,6 +192,7 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(7)
     void testGetReturnDocumentTypeValidity() {
         String url = "https://qrdafd.qrowntech.io/dev/doctmgmt/returnDocumentTypeValidity";
         APIResponse response = apiRequest.get(url);
@@ -173,20 +205,21 @@ public class ApiQrowntechTest {
     }
     
     @Test
+    @Order(8)
     void testGenerateQrPreview() {
-        String jsonBody = """
-            {
-                "id_in_qr": false,
-                "corners": false,
-                "authenticator": null,
-                "domain": false,
-                "group_by_customer": null,
-                "background_color": "#E0E0E000",
-                "foreground_color": "#000000",
-                "logo_content": null,
-                "qr_design": "1"
-            }
-            """;
+    	String jsonBody = String.format("""
+    	        {
+    	            "id_in_qr": false,
+    	            "corners": %b,
+    	            "authenticator": null,
+    	            "domain": %b,
+    	            "group_by_customer": null,
+    	            "background_color": "%s",
+    	            "foreground_color": "%s",
+    	            "logo_content": null,
+    	            "qr_design": "%d"
+    	        }
+    	        """, corners, domain, backgroundColor, foregroundColor, qrDesign);
 
         APIResponse response = apiRequest.post("https://qrdafd.qrowntech.io/dev/docmgmt/generateQrPreview",
             RequestOptions.create().setHeader("Content-Type", "application/json").setData(jsonBody)

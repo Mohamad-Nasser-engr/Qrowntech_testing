@@ -2,6 +2,7 @@ import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.junit.UsePlaywright;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.ScreenshotType;
 
@@ -20,7 +21,7 @@ import javax.imageio.ImageIO;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 
-
+@UsePlaywright
 public class Dashboard_Test {
     static Playwright playwright;
     static Browser browser;
