@@ -54,7 +54,7 @@ Before getting started, ensure you have the following tools and accounts set up:
 ---
 
 ## ⚙️ Installation & Setup
-This section guides you through setting up a Java project using Maven, configuring Playwright for browser automation, and using the recorder to generate test code.
+This section guides you through setting up a Java project using Maven, configuring Playwright for browser automation, and using the recorder to generate UI test code.
 
 ### 1. Create a Maven Project
 Maven is a build automation tool used primarily for Java projects. It uses a **pom.xml** file to manage dependencies and build configurations. If you're using an IDE like IntelliJ IDEA or Eclipse, you can create a Maven project from the "New Project" wizard.
