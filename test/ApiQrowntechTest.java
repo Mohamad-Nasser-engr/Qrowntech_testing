@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class) 
 public class ApiQrowntechTest {
     static Playwright playwright;
     static APIRequestContext apiRequest;
@@ -86,7 +86,6 @@ public class ApiQrowntechTest {
 
         // Setup APIRequestContext with baseURL and cookie header
         apiRequest = playwright.request().newContext(new APIRequest.NewContextOptions()
-            .setBaseURL("https://ambitious-smoke-0480d8303.5.azurestaticapps.net")
             .setExtraHTTPHeaders(Map.of(
                 "Cookie", cookieHeader,
                 "Authorization", "Bearer " + token  // adjust if your API uses another header
@@ -230,6 +229,7 @@ public class ApiQrowntechTest {
         System.out.println("GENERATE QR PREVIEW RESPONSE");
         System.out.println("QR Preview Response:\n" + body);
         System.out.println();
+        //System.out.println(jsonBody);
     }
 
 }
